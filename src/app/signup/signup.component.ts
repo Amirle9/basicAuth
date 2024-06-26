@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+
 
 /**
  * The SignupComponent handles the sign-up functionality for the app
@@ -14,8 +16,9 @@ import { AuthService } from '../auth.service';
 export class SignupComponent {
   username: string = '';        // Stores the username entered by the user
   password: string = '';
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   /**
    * This method is called when the sign-up form is submitted.
@@ -23,10 +26,16 @@ export class SignupComponent {
    */
 
   onSubmit() {
-    this.authService.signup({ username: this.username, password: this.password }).subscribe(response => {
-      console.log('Signup successful', response);
-    }, error => {
-      console.error('Signup failed', error);
-    });
+    this.authService.signup({ username: this.username, password: this.password }).subscribe(
+      response => {
+        console.log('Signup successful', response);
+        // Navigate to the login page
+        this.router.navigate(['/login']);
+      },
+      error => {
+        console.error('Signup failed', error);
+        this.errorMessage = 'Signup failed. Please try again.';
+      }
+    );
   }
 }

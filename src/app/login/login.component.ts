@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
-
-/**
- * The LoginComponent handles the login functionality for the application
- * It collects the username and password from the user and submits it to the AuthService.
- */
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,21 +8,23 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username: string = '';  // Stores the username entered by the user
-  password: string = '';  // Stores the password
+  username: string = '';
+  password: string = '';
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService) { }
-
-  /**
-   * This method is called when the login form is submitted
-   * It sends the username and password to the AuthService for authentication.
-   */
+  constructor(private authService: AuthService, private router: Router) { }
 
   onSubmit() {
-    this.authService.login({ username: this.username, password: this.password }).subscribe(response => {
-      console.log('Login successful', response);
-    }, error => {
-      console.error('Login failed', error);
-    });
+    this.authService.login({ username: this.username, password: this.password }).subscribe(
+      response => {
+        console.log('Login successful', response);
+        // Navigate to the success page
+        this.router.navigate(['/success']);
+      },
+      error => {
+        console.error('Login failed', error);
+        this.errorMessage = 'Invalid username or password';
+      }
+    );
   }
 }

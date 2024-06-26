@@ -16,6 +16,9 @@
         <span>Don't have an account?</span>
         <a [routerLink]="['/signup']" class="btn btn-secondary ml-2">Sign Up</a>
       </div>
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
     </div>
   </div>
   

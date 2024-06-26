@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:5000/api/auth';     // Base URL for authentication API
+  private baseUrl = 'http://localhost:5240/api/auth';     // Base URL for authentication API
 
   constructor(private http: HttpClient) { }
 
@@ -21,8 +21,19 @@ export class AuthService {
    * @returns Observable<any> - The response from the server.
    */
 
-  login(credentials: { username: string, password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+   login(credentials: { username: string, password: string }): Observable<any> {
+    return new Observable(observer => {
+      this.http.post<any>(`${this.baseUrl}/login`, credentials).subscribe(
+        response => {
+          localStorage.setItem('username', credentials.username);  // Store username in localStorage
+          observer.next(response);
+          observer.complete();
+        },
+        error => {
+          observer.error(error);
+        }
+      );
+    });
   }
 
   /**
